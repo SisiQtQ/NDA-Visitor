@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign the NDA</title>
+  <script src="https://cdn.pandadoc.com/pandadoc-embed-js/1.9.1/embed.js"></script>
+  <style>
+    body {
+      margin: 0;
+      background-color: #001A24;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    #pandadoc-form {
+      flex-grow: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="pandadoc-form"></div>
+
+  <script>
+    const iframe = document.createElement('iframe');
+    iframe.src = "https://eform.pandadoc.com/?eform=827f4be8-8ab4-4715-9cdd-8ac0127cde05";
+    iframe.id = "pd-iframe";
+    iframe.style.width = "100%";
+    iframe.style.height = "100%";
+    iframe.style.border = "none";
+    document.getElementById("pandadoc-form").appendChild(iframe);
+
+    // Listen for the form completion event
+    var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+    var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+
+    window[eventMethod](messageEvent, function (e) {
+      if (e && e.data && iframe && e.source === iframe.contentWindow) {
+        try {
+          var message = JSON.parse(e.data);
+          if (message && message.event === "embed.form.completed") {
+            // Redirect to start screen
+            window.location.href = "https://sisiqtq.github.io/NDA-Visitor/";
+          }
+        } catch (error) {
+          console.error("Error parsing PandaDoc message:", error);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
