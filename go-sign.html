@@ -24,28 +24,28 @@
   <div id="pandadoc-form"></div>
 
   <script>
-    const iframe = document.createElement('iframe');
-    iframe.src = "https://eform.pandadoc.com/?eform=827f4be8-8ab4-4715-9cdd-8ac0127cde05";
+    const formURL = "https://eform.pandadoc.com/?eform=827f4be8-8ab4-4715-9cdd-8ac0127cde05";
+    const returnURL = "https://sisiqtq.github.io/NDA-Visitor/";
+
+    const iframe = document.createElement("iframe");
+    iframe.src = formURL;
     iframe.id = "pd-iframe";
     iframe.style.width = "100%";
     iframe.style.height = "100%";
     iframe.style.border = "none";
     document.getElementById("pandadoc-form").appendChild(iframe);
 
-    var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
-    var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+    window.addEventListener("message", function (event) {
+      if (!event.data || event.source !== iframe.contentWindow) return;
 
-    window[eventMethod](messageEvent, function (e) {
       try {
-        if (e && e.data && iframe && e.source === iframe.contentWindow) {
-          const message = JSON.parse(e.data);
-          if (message && message.event === "embed.form.completed") {
-            console.log("✅ PandaDoc form completed - redirecting...");
-            window.location.href = "https://sisiqtq.github.io/NDA-Visitor/";
-          }
+        const message = JSON.parse(event.data);
+        if (message.event === "embed.form.completed") {
+          console.log("✅ Form completed! Redirecting...");
+          window.location.href = returnURL;
         }
       } catch (error) {
-        console.error("Error parsing PandaDoc message:", error);
+        console.error("⚠️ Could not parse event:", error);
       }
     });
   </script>
